@@ -138,6 +138,8 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 
 **start rails server** `rails s;`, open [localhost:3000](http://localhost:3000)
 
+It is a working todo-app with websockets. Try opening two browser windows at once. 
+
 ---
 
 ### **List of HTML components**

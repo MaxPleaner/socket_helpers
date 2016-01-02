@@ -78,6 +78,8 @@
     ```
 - This provides working 'index, 'create', and 'destroy' websocket functionality in quite few lines of HTML, which is mainly the point of this gem. 'update' is automatic as well. When a record is added to the page, a `record-id` attribute is automatically set to `<record_class>,<id>` on the newly-added template. This is used to lookup records. 
 
+- `rails s;`, open [localhost:3000](http://localhost:3000)
+
 - List of HTML components
   - elements with a class of `<model_name>-index` become lists, with elements auto-removed and added in response to websocket events. 
   - inside a `<model_name>-index` element, an element with a `template` attribute becomes the template for added records. These sections correspond to a single ActiveRecord class (underscore, singular i.e. `todo_list_item` for `TodoListItem`)
@@ -90,6 +92,6 @@
 - Witout doing this, the page will be empty every time it is refreshed. The page needs to start out with a list of records loaded.
 - Create an html element with an `init` attribute set to a model class, i.e. `todo`. This element will be auto-hidden. In the html-serving controller method, make an instance variable for whatever data is going to be included. On the html page, set the content of the `[init]` element to a JSON stringified version of your instance variable.`
 
-- **Additional Helpers **
+- **Additional Helpers**
 - you can make one html element toggle another open / close very easily.
 - Just make them 'siblings (share the same parent element) and give the trigger a `toggles` attribute with a value set to the CSS selector of the target. The target will be initially closed. 

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Socket helpers by MaxPleaner</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Socket helpers</h1>
+        <h2>websocket helpers for rails</h2>
+        <a href="https://github.com/MaxPleaner/socket_helpers" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="sockethelpers" class="anchor" href="#sockethelpers" aria-hidden="true"><span class="octicon octicon-link"></span></a>SocketHelpers</h1>
+
+<h3>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation:</h3>
+
+<ul>
+<li>install to system: <code>gem install socket_helpers;</code>
+</li>
+<li>install with bundler: <code>gem 'socket_helpers'</code>
+</li>
+</ul>
+
+<h3>
+<a id="usage-these-instructions-can-be-seen-implemented-in-the-socket_helpers_example-repo" class="anchor" href="#usage-these-instructions-can-be-seen-implemented-in-the-socket_helpers_example-repo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage (these instructions can be seen implemented in the <a href="http://github.com/maxpleaner/socket_helpers_example">socket_helpers_example</a> repo</h3>
+
+<ul>
+<li><code>rails new App; cd App;</code></li>
+<li><code>rails g scaffold Todo content:string; rake db:migrate</code></li>
+<li><code>echo -e "\n gem 'socket_helpers'" &gt;&gt; Gemfile; bundle;</code></li>
+<li>add javascript requires to application.js
+
+<ul>
+<li><code>//= require websocket-rails/main</code></li>
+<li><code>//= require socket_helpers</code></li>
+</ul>
+</li>
+<li>
+<p>include the controller helpers to application_controller</p>
+
+<div class="highlight highlight-source-ruby"><pre> <span class="pl-k">class</span> <span class="pl-en">ApplicationController<span class="pl-e"> &lt; ActionController::Base</span></span>
+   <span class="pl-k">include</span> <span class="pl-c1">SocketHelpers</span>::<span class="pl-c1">ControllerHelpers</span>
+ <span class="pl-k">end</span></pre></div>
+</li>
+<li>
+<p>Remove the default scaffold routes (<code>resources :todos</code>). This gem supports only <em>query</em> parameters, not <em>path</em> parameters.</p>
+
+<ul>
+<li>i.e. parameters are never declared in the routes.rb file, but they are declared in controllers. For example, routes like <code>DELETE /todos/MY_TODO_ID</code> are not supported, but <code>DELETE /todos?id=MY_TODO_ID</code> are.</li>
+</ul>
+</li>
+<li><p>Create a HTML-serving endpoint <code>rails g controller HtmlPages root</code></p></li>
+<li>
+<p>Create websocket API endpoints and write routes:</p>
+
+<div class="highlight highlight-source-ruby"><pre> <span class="pl-c"># routes.rb</span>
+ get <span class="pl-s"><span class="pl-pds">"</span>/<span class="pl-pds">"</span></span>, <span class="pl-c1">to:</span> <span class="pl-s"><span class="pl-pds">"</span>html_pages#root<span class="pl-pds">"</span></span>
+ post <span class="pl-s"><span class="pl-pds">"</span>todos<span class="pl-pds">"</span></span>, <span class="pl-c1">to:</span> <span class="pl-s"><span class="pl-pds">"</span>todos#create<span class="pl-pds">"</span></span>
+ delete <span class="pl-s"><span class="pl-pds">"</span>todos<span class="pl-pds">"</span></span>, <span class="pl-c1">to:</span> <span class="pl-s"><span class="pl-pds">"</span>todos#destroy<span class="pl-pds">"</span></span></pre></div>
+
+<div class="highlight highlight-source-ruby"><pre> <span class="pl-c"># app/controllers/todos_controller.rb</span>
+ <span class="pl-k">class</span> <span class="pl-en">TodosController<span class="pl-e"> &lt; ApplicationController</span></span>
+   <span class="pl-k">def</span> <span class="pl-en">create</span>
+     todo <span class="pl-k">=</span> <span class="pl-c1">Todo</span>.create(todo_params)
+     websocket_response(todo, <span class="pl-s"><span class="pl-pds">"</span>create<span class="pl-pds">"</span></span>)
+   <span class="pl-k">end</span>
+   <span class="pl-k">def</span> <span class="pl-en">destroy</span>
+     todo <span class="pl-k">=</span> <span class="pl-c1">Todo</span>.find_by(<span class="pl-c1">id:</span> params[<span class="pl-c1">:id</span>])
+     todo.destroy
+     websocket_response(todo, <span class="pl-s"><span class="pl-pds">"</span>destroy<span class="pl-pds">"</span></span>)
+   <span class="pl-k">end</span>
+   <span class="pl-k">def</span> <span class="pl-en">todo_params</span>
+   <span class="pl-k">end</span>
+ <span class="pl-k">end</span></pre></div>
+</li>
+<li>the first argument of <code>websocket_response</code> can be a single record or an array/query. The second can be either <code>create</code>, <code>destroy</code>, or <code>update</code>. The receiver-hooks for these events are automatically created by the javascript client. </li>
+<li>
+<p>use the DSL for HTML in html_pages/root.html.erb. See below for a list of HTML components available.</p>
+
+<div class="highlight highlight-text-html-basic"><pre>  &lt;<span class="pl-ent">h3</span>&gt;Create todo&lt;/<span class="pl-ent">h3</span>&gt;
+  &lt;<span class="pl-ent">form</span> <span class="pl-e">action</span>=<span class="pl-s"><span class="pl-pds">"</span>todos<span class="pl-pds">"</span></span> <span class="pl-e">method</span>=<span class="pl-s"><span class="pl-pds">"</span>POST<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">input</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text<span class="pl-pds">"</span></span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span> <span class="pl-e">placeholder</span>=<span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">input</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>submit<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>submit<span class="pl-pds">"</span></span>&gt;
+  &lt;/<span class="pl-ent">form</span>&gt;
+  &lt;<span class="pl-ent">div</span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>todo_index<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">h3</span>&gt;Todos&lt;/<span class="pl-ent">h3</span>&gt;
+    &lt;<span class="pl-ent">p</span> <span class="pl-e">template</span>&gt;
+      &lt;<span class="pl-ent">span</span> <span class="pl-e">template-attr</span>=<span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">span</span>&gt;
+      &lt;<span class="pl-ent">form</span> <span class="pl-e">action</span>=<span class="pl-s"><span class="pl-pds">"</span>/todos<span class="pl-pds">"</span></span> <span class="pl-e">method</span>=<span class="pl-s"><span class="pl-pds">"</span>POST<span class="pl-pds">"</span></span>
+        &lt;<span class="pl-e">input</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>hidden<span class="pl-pds">"</span></span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>_method<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>DELETE<span class="pl-pds">"</span></span>
+        &lt;<span class="pl-e">input</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>hidden<span class="pl-pds">"</span></span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span> <span class="pl-e">template-attr</span>=<span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span>
+        &lt;<span class="pl-e">input</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>submit<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>remove<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">input</span>&gt;
+      &lt;/<span class="pl-ent">form</span>&gt;
+      &lt;<span class="pl-ent">br</span>&gt;
+    &lt;/<span class="pl-ent">p</span>&gt;
+    &lt;/<span class="pl-ent">ul</span>&gt;
+  &lt;/<span class="pl-ent">div</span>&gt;
+  &lt;<span class="pl-ent">div</span> <span class="pl-e">init</span>=<span class="pl-s"><span class="pl-pds">"</span>todo<span class="pl-pds">"</span></span>&gt;
+    &lt;%= Oj.dump Todo.all %&gt;
+  &lt;/<span class="pl-ent">div</span>&gt;</pre></div>
+</li>
+<li><p>This provides working 'index, 'create', and 'destroy' websocket functionality in quite few lines of HTML, which is mainly the point of this gem. 'update' is automatic as well. When a record is added to the page, a <code>record-id</code> attribute is automatically set to <code>&lt;record_class&gt;,&lt;id&gt;</code> on the newly-added template. This is used to lookup records. </p></li>
+<li>
+<p>List of HTML components</p>
+
+<ul>
+<li>elements with a class of <code>&lt;model_name&gt;-index</code> become lists, with elements auto-removed and added in response to websocket events. </li>
+<li>inside a <code>&lt;model_name&gt;-index</code> element, an element with a <code>template</code> attribute becomes the template for added records. These sections correspond to a single ActiveRecord class (underscore, singular i.e. <code>todo_list_item</code> for <code>TodoListItem</code>)</li>
+<li>inside a <code>[template]</code> element (i.e. <code>&lt;div template&gt;&lt;/div&gt;</code>), the <code>template-attr</code> attribute is used to establish two-way databinding on an element. Its value is the name of the attribute. This can be used to set the value of form inputs or to change text nodes.</li>
+<li>
+<strong>all form submits are intercepted</strong> by event listeners. They submit AJAX requests using the url in the form's <code>action</code> attribute and the method in the form's <code>method</code> attribute (i.e. <code>action="/todos" method=POST"</code>). This works for <code>GET</code> and <code>POST</code>, but Like normally in Rails, <code>PUT</code> and <code>DELETE</code> can be selected by adding a hidden input method i.e. <code>input type="hidden" name="_method" value="PUT"</code>
+</li>
+<li>To submit an id with a form, bind a hidden attribute i.e. <code>&lt;input type="hidden" name="id" template-attr='id'&gt;</code>
+</li>
+<li>Outside of <code>[template]</code>s, binding tags are a bit more verbose. <code>&lt;span binding-tag='todos,1,content'&gt;&lt;/span&gt;</code> where the three comma-separated arguments are , , and . Internally, <code>template-attr</code> tags are converted to <code>binding-tag</code> once new records are added to the page. </li>
+</ul>
+</li>
+<li><p><strong>Loading initial data on the page</strong></p></li>
+<li>Witout doing this, the page will be empty every time it is refreshed. The page needs to start out with a list of records loaded.</li>
+<li><p>Create an html element with an <code>init</code> attribute set to a model class, i.e. <code>todo</code>. This element will be auto-hidden. In the html-serving controller method, make an instance variable for whatever data is going to be included. On the html page, set the content of the <code>[init]</code> element to a JSON stringified version of your instance variable.`</p></li>
+<li><p>*<em>Additional Helpers *</em></p></li>
+<li>you can make one html element toggle another open / close very easily.</li>
+<li>Just make them 'siblings (share the same parent element) and give the trigger a <code>toggles</code> attribute with a value set to the CSS selector of the target. The target will be initially closed. </li>
+</ul>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/MaxPleaner/socket_helpers/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/MaxPleaner/socket_helpers/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/MaxPleaner/socket_helpers"></a> is maintained by <a href="https://github.com/MaxPleaner">MaxPleaner</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>

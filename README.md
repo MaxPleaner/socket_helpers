@@ -50,7 +50,41 @@
        end
      end
    ```
-- write some html in html_pages/root.html.erb
-
-    ```ruby
+- the first argument of `websocket_response` can be a single record or an array/query. The second can be either `create`, `destroy`, or `update`. The receiver-hooks for these events are automatically created by the javascript client. 
+- use the DSL for HTML in html_pages/root.html.erb. See below for a list of HTML components available.
+    ```html
+      <h3>Create todo</h3>
+      <form action="todos" method="POST">
+        <input type="text" name="content" placeholder="content">
+        <input type="submit" value="submit">
+      </form>
+      <div class="todo_index">
+        <h3>Todos</h3>
+        <p template>
+          <span template-attr="content"></span>
+          <form action="/todos" method="POST"
+            <input type="hidden" name="_method" value="DELETE"
+            <input type="hidden" name="id" template-attr="id"
+            <input type="submit" value="remove"></input>
+          </form>
+          <br>
+        </p>
+        </ul>
+      </div>
+      <div init="todo">
+        <%= Oj.dump Todo.all %>
+      </div>
     ```
+- This provides working 'index, 'create', and 'destroy' websocket functionality in quite few lines of HTML, which is mainly the point of this gem. 'update' is automatic as well. When a record is added to the page, a `record-id` attribute is automatically set to `<record_class>,<id>` on the newly-added template. This is used to lookup records. 
+
+- List of HTML components
+  - elements with a class of `<model_name>-index` become lists, with elements auto-removed and added in response to websocket events. 
+  - inside a `<model_name>-index` element, an element with a `template` attribute becomes the template for added records. These sections correspond to a single ActiveRecord class (underscore, singular i.e. `todo_list_item` for `TodoListItem`)
+  - inside a `[template]` element (i.e. `<div template></div>`), the `template-attr` attribute is used to establish two-way databinding on an element. Its value is the name of the attribute. This can be used to set the value of form inputs or to change text nodes.
+  - **all form submits are intercepted** by event listeners. They submit AJAX requests using the url in the form's `action` attribute and the method in the form's `method` attribute (i.e. `action="/todos" method=POST"`). This works for `GET` and `POST`, but Like normally in Rails, `PUT` and `DELETE` can be selected by adding a hidden input method i.e. `input type="hidden" name="_method" value="PUT"`
+  - To submit an id with a form, bind a hidden attribute i.e. `<input type="hidden" name="id" template-attr='id'>`
+  - Outside of `[template]`s, binding tags are a bit more verbose. `<span binding-tag='todos,1,content'></span>` where the three comma-separated arguments are <model_class>, <id>, and <attribute>. Internally, `template-attr` tags are converted to `binding-tag` once new records are added to the page. 
+
+- **Loading initial data on the page**
+- Witout doing this, the page will be empty every time it is refreshed. The page needs to start out with a list of records loaded.
+- Create an html element with an `init` attribute set to a model class, i.e. `todo`. This element will be auto-hidden. In the html-serving controller method, make an instance variable for whatever data is going to be included. On the html page, set the content of the `[init]` element to a JSON stringified version of your instance variable.`

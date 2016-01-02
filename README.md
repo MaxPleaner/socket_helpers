@@ -22,16 +22,21 @@
    ```
 
 - Remove the default scaffold routes (`resources :todos`). This gem supports only _query_ parameters, not _path_ parameters.
+  - i.e. parameters are never declared in the routes.rb file, but they are declared in controllers. For example, routes like `DELETE /todos/MY_TODO_ID` are not supported, but `DELETE /todos?id=MY_TODO_ID` are.
+
+- Create a HTML-serving endpoint `rails g controller HtmlPages root`
+- 
+- Create websocket API endpoints and write routes:
    
-i.e. parameters are never declared in the routes.rb file, but they are declared in controllers.
-
-for example, routes like `DELETE /todos/MY_TODO_ID` are not supported, but `DELETE /todos?id=MY_TODO_ID` are.
-
-This may change pending an update to the gem.
-
- - Write routes for create and destroy like so:
+   ```ruby
+     # routes.rb
+     get "/", to: "html_pages#root"
+     post "todos", to: "todos#create"
+     delete "todos", to: "todos#destroy"
+   ```
 
    ```ruby
+     # app/controllers/todos_controller.rb
      class TodosController < ApplicationController
        def create
          todo = Todo.create(todo_params)
@@ -46,3 +51,7 @@ This may change pending an update to the gem.
        end
      end
    ```
+- write some html in html_pages/root.html.erb
+
+    ```ruby
+    ```

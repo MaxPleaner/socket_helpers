@@ -13,15 +13,14 @@
 - add javascript requires to application.js
   - `//= require websocket-rails/main`
   - `//= require socket_helpers`
-
-
-- include the controller helpers by adding `include SocketHelpers::ControllerHelpers` to application_controller.rb like so:
+- include the controller helpers to application_controller
  
    ```ruby
      class ApplicationController < ActionController::Base
        include SocketHelpers::ControllerHelpers
      end
    ```
+
  - Remove the default scaffold routes (`resources :todos`). This gem supports only _query_ parameters, not _path_ parameters.
    i.e parameters are never declared in the routes.rb file, but they are declared in controllers.
    for example, routes like `DELETE /todos/MY_TODO_ID` are not supported, but `DELETE /todos?id=MY_TODO_ID` are.

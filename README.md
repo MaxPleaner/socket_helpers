@@ -7,10 +7,10 @@
 
 ### Usage (these instructions can be seen implemented in the [socket_helpers_example](http://github.com/maxpleaner/socket_helpers_example) repo
 
-- `rails new App; cd App;`
-- `rails g scaffold Todo content:string; rake db:migrate`
-- `echo -e "\n gem 'socket_helpers'" >> Gemfile; bundle;`
-- add javascript requires to application.js
+- 1. **create rails app** `rails new App; cd App;`
+- 2. **create scaffold** `rails g scaffold Todo content:string; rake db:migrate`
+- 3. **add gem** `echo -e "\n gem 'socket_helpers'" >> Gemfile; bundle;`
+- 4. **add javascript requires to application.js**
   - `//= require websocket-rails/main`
   - `//= require socket_helpers`
 - add jquery initializer for whatever models you need websocket resources for
@@ -21,7 +21,7 @@
      })
    ```
 
-- include the controller helpers to application_controller
+- 5. **include the controller helpers to application_controller**
  
    ```ruby
      class ApplicationController < ActionController::Base
@@ -29,11 +29,11 @@
      end
    ```
 
-- Remove the default scaffold routes (`resources :todos`). This gem supports only _query_ parameters, not _path_ parameters.
+- 6. **Remove the default scaffold routes** (`resources :todos`). This gem supports only _query_ parameters, not _path_ parameters.
   - i.e. parameters are never declared in the routes.rb file, but they are declared in controllers. For example, routes like `DELETE /todos/MY_TODO_ID` are not supported, but `DELETE /todos?id=MY_TODO_ID` are.
 
-- Create a HTML-serving endpoint `rails g controller HtmlPages root`
-- Create websocket API endpoints and write routes:
+- 7. **Create a HTML-serving endpoint** `rails g controller HtmlPages root`
+- 8. **Create websocket API endpoints and write routes**
    
    ```ruby
      # routes.rb
@@ -59,7 +59,7 @@
      end
    ```
 - the first argument of `websocket_response` can be a single record or an array/query. The second can be either `create`, `destroy`, or `update`. The receiver-hooks for these events are automatically created by the javascript client. 
-- use the DSL for HTML in html_pages/root.html.erb. See below for a list of HTML components available.
+- 9. **use the DSL for HTML** in html_pages/root.html.erb. See below for a list of HTML components available.
 
     ```html
       <h3>Create todo</h3>
@@ -86,7 +86,7 @@
     ```
 - This provides working 'index, 'create', and 'destroy' websocket functionality in quite few lines of HTML, which is mainly the point of this gem. 'update' is automatic as well. When a record is added to the page, a `record-id` attribute is automatically set to `<record_class>,<id>` on the newly-added template. This is used to lookup records. 
 
-- `rails s;`, open [localhost:3000](http://localhost:3000)
+- 10. **start rails server** `rails s;`, open [localhost:3000](http://localhost:3000)
 
 - List of HTML components
   - elements with a class of `<model_name>-index` become lists, with elements auto-removed and added in response to websocket events. 

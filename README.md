@@ -11,14 +11,28 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 
 ---
 
+#### 2.
+
 **create scaffold** `rails g scaffold Todo content:string; rake db:migrate`
 
+---
+
+#### 3.
+
 **add gem** `echo -e "\n gem 'socket_helpers'" >> Gemfile; bundle;`
+
+---
+
+#### 4.
 
 **add javascript requires to application.js**
 
 - `//= require websocket-rails/main`
 - `//= require socket_helpers`
+
+---
+
+#### 5.
 
 **add jquery initializer** for whatever models you need websocket resources for
 
@@ -27,6 +41,9 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
     SocketHelpers.initialize(["todo"])
    })
  ```
+---
+
+#### 6.
 
 **include the controller helpers to application_controller**
  
@@ -36,11 +53,23 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
    end
  ```
 
+---
+
+#### 7.
+
 **Remove the default scaffold routes** (`resources :todos`). This gem supports only _query_ parameters, not _path_ parameters.
 
 - i.e. parameters are never declared in the routes.rb file, but they are declared in controllers. For example, routes like `DELETE /todos/MY_TODO_ID` are not supported, but `DELETE /todos?id=MY_TODO_ID` are.
 
+---
+
+#### 8.
+
 **Create a HTML-serving endpoint** `rails g controller HtmlPages root`
+
+---
+
+#### 9.
 
 **Create websocket API endpoints and write routes**
  
@@ -70,6 +99,10 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 
 - the first argument of `websocket_response` can be a single record or an array/query. The second can be either `create`, `destroy`, or `update`. The receiver-hooks for these events are automatically created by the javascript client. 
 
+---
+
+#### 10.
+
 **use the DSL for HTML** in html_pages/root.html.erb. See below for a list of HTML components available.
 
   ```html
@@ -97,6 +130,10 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
   ```
 
 - This provides working 'index, 'create', and 'destroy' websocket functionality in quite few lines of HTML, which is mainly the point of this gem. 'update' is automatic as well. When a record is added to the page, a `record-id` attribute is automatically set to `<record_class>,<id>` on the newly-added template. This is used to lookup records. 
+
+---
+
+#### 11.
 
 **start rails server** `rails s;`, open [localhost:3000](http://localhost:3000)
 

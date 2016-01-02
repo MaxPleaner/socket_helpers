@@ -1,14 +1,15 @@
 # SocketHelpers
 
-### Installation:
+### Usage /Installation
 
-install to system: `gem install socket_helpers;`
+_(these instructions can be seen implemented in the [socket_helpers_example](http://github.com/maxpleaner/socket_helpers_example) repo_
 
-install with bundler: `gem 'socket_helpers'`
+---
 
-### Usage (these instructions can be seen implemented in the [socket_helpers_example](http://github.com/maxpleaner/socket_helpers_example) repo
-
+#### 1.
 **create rails app** `rails new App; cd App;`
+
+---
 
 **create scaffold** `rails g scaffold Todo content:string; rake db:migrate`
 

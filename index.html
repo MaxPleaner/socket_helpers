@@ -48,14 +48,14 @@
 <h4>
 <a id="2" class="anchor" href="#2" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.</h4>
 
-<p><strong>create scaffold</strong> <code>rails g scaffold Todo content:string; rake db:migrate</code></p>
+<p><strong>create a model</strong> <code>rails g scaffold Todo content:string; rake db:migrate;</code></p>
 
 <hr>
 
 <h4>
 <a id="3" class="anchor" href="#3" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.</h4>
 
-<p><strong>add gem</strong> <code>echo -e "\n gem 'socket_helpers'" &gt;&gt; Gemfile; bundle;</code></p>
+<p>*<em>add gems *</em> <code>gem 'socket_helpers'</code> and <code>gem websocket-rails</code></p>
 
 <hr>
 
@@ -65,7 +65,7 @@
 <p><strong>add javascript requires to application.js</strong></p>
 
 <ul>
-<li><code>//= require websocket-rails/main</code></li>
+<li><code>//= require websocket_rails/main</code></li>
 <li><code>//= require socket_helpers</code></li>
 </ul>
 
@@ -122,6 +122,7 @@
    delete <span class="pl-s"><span class="pl-pds">"</span>todos<span class="pl-pds">"</span></span>, <span class="pl-c1">to:</span> <span class="pl-s"><span class="pl-pds">"</span>todos#destroy<span class="pl-pds">"</span></span></pre></div>
 
 <div class="highlight highlight-source-ruby"><pre>   <span class="pl-c"># app/controllers/todos_controller.rb</span>
+   <span class="pl-c"># all the default scaffold stuff can be deleted</span>
    <span class="pl-k">class</span> <span class="pl-en">TodosController<span class="pl-e"> &lt; ApplicationController</span></span>
      <span class="pl-k">def</span> <span class="pl-en">create</span>
        todo <span class="pl-k">=</span> <span class="pl-c1">Todo</span>.create(todo_params)
@@ -167,7 +168,7 @@
       &lt;/<span class="pl-ent">ul</span>&gt;
     &lt;/<span class="pl-ent">div</span>&gt;
     &lt;<span class="pl-ent">div</span> <span class="pl-e">init</span>=<span class="pl-s"><span class="pl-pds">"</span>todo<span class="pl-pds">"</span></span>&gt;
-      &lt;%= Oj.dump Todo.all %&gt;
+      &lt;%= Oj.dump [Todo.first] %&gt;
     &lt;/<span class="pl-ent">div</span>&gt;</pre></div>
 
 <ul>

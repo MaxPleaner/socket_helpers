@@ -13,13 +13,13 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 
 #### 2.
 
-**create scaffold** `rails g scaffold Todo content:string; rake db:migrate;`
+**create a model** `rails g scaffold Todo content:string; rake db:migrate;`
 
 ---
 
 #### 3.
 
-**add gem** `echo -e "\n gem 'socket_helpers'" >> Gemfile; bundle;`
+**add gems** `gem 'socket_helpers'` and `gem 'websocket-rails'`
 
 ---
 
@@ -34,7 +34,7 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 
 #### 5.
 
-**add jquery initializer** for whatever models you need websocket resources for
+**add jquery initializer** for whatever models you need websocket resources for (singular, snake case)
 
  ```javascript
    $(function(){
@@ -57,7 +57,7 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 
 #### 7.
 
-**Remove the default scaffold routes** (`resources :todos`). This gem supports only _query_ parameters, not _path_ parameters.
+**Remove the default scaffold routes** (`resources :todos`). This gem supports only query parameters, not path parameters. This limitation only applies to `websocket_response` endpoints. Other endpoints can use path parameters.
 
 - i.e. parameters are never declared in the routes.rb file, but they are declared in controllers. For example, routes like `DELETE /todos/MY_TODO_ID` are not supported, but `DELETE /todos?id=MY_TODO_ID` are.
 
@@ -99,7 +99,7 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
    end
  ```
 
-- the first argument of `websocket_response` can be a single record or an array. _It cannot be a query_. The second can be either `create`, `destroy`, or `update`. The receiver-hooks for these events are automatically created by the javascript client. 
+- the first argument of `websocket_response` can be a single record or an array. _It cannot be a query_. The second can be either `create`, `destroy`, or `update` (these values hard-coded into the app. The receiver-hooks for these events are automatically created by the javascript client. 
 
 ---
 
@@ -127,7 +127,7 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
       </ul>
     </div>
     <div init="todo">
-      <%= Oj.dump Todo.all %>
+      <%= Oj.dump [Todo.first] %>
     </div>
   ```
 
@@ -145,23 +145,29 @@ It is a working todo-app with websockets. Try opening two browser windows at onc
 
 ### **List of HTML components**
 
-- elements with a class of `<model_name>-index` become lists, with elements auto-removed and added in response to websocket events. For example, `<div class="todo-index"></div>
+- elements with a class of `<model_name>-index` become lists, with elements auto-removed and added in response to websocket events. For example, `<div class="todo-index"></div>`. These sections correspond to a single ActiveRecord class (underscore, singular i.e. `todo_list_item` for `TodoListItem`)
 
-- inside a `<model_name>-index` element, an element with a `template` attribute becomes the template for added records. These sections correspond to a single ActiveRecord class (underscore, singular i.e. `todo_list_item` for `TodoListItem`). For example, `<div template></div>`
+- inside a `<model_name>-index` element, an element with a `template` attribute becomes the template for added records. For example, `<div template></div>`
 
-- inside a `[template]` element, the `template-attr` attribute is used to establish two-way databinding on an element. Its value is the name of the attribute. This can be used to set the value of form inputs or to change text nodes. For example, `<input type="text" name="content" template-attr="content">` or `<span template-attr="content">`
+- inside a `[template]` element, the `template-attr` attribute is used to establish two-way databinding on an element. Its value is the name of the attribute. This can be used to set the value of form inputs or to change text nodes. For example,
+
+```html
+  <input type="text" name="content" template-attr="content">
+  <!-- or alternatively -->
+  <span template-attr="content">
+```
 
 - **all form submits are intercepted** by event listeners by default. To override this, add the "skip-sockets" attribute to the form element. They submit AJAX requests using the url in the form's `action` attribute and the method in the form's `method` attribute (i.e. `action="/todos" method="POST"`). This works for `GET` and `POST` only, but `PUT` and `DELETE` can be used by adding a hidden input method i.e. `input type="hidden" name="_method" value="PUT"`. This is the default Rails behavior anyway.
 
 - To submit an id with a form, bind a hidden attribute i.e. `<input type="hidden" name="id" template-attr='id'>`
 
-- Outside of `[template]`s, binding tags are a bit more verbose. `<span binding-tag='todos,1,content'></span>` where the three comma-separated arguments are `<model_class>`, `<id>`, and `<attribute>`. Internally, `template-attr` tags are converted to `binding-tag` once new records are added to the page. 
+- Outside of `[template]`s, binding tags are a bit more verbose. `<span binding-tag='todos,1,content'></span>` where the three comma-separated arguments are `<model_class>`, `<id>`, and `<attribute>`. `template-attr` tags are automatically converted to `binding-tag` once new records are added to the page. 
 
 ---
 
 ### **Loading initial data on the page**
 
-Witout doing this, the page will be empty every time it is refreshed. The page needs to start out with a list of records loaded.
+Without doing this, the page will be empty every time it is refreshed. The page needs to start out with a list of records loaded.
 
 Create an html element with an `init` attribute set to a model class, i.e. `todo`. This element will be auto-hidden. In the html-serving controller method, make an instance variable for whatever data is going to be included (expects an array, not a single object or query). On the html page, use ERB to set the content of the `[init]` element to a JSON stringified version of your instance variable. For example, `<div init="todo"><%= Oj.dump([User.first]) %></div>`
 
@@ -173,6 +179,8 @@ you can make one html element toggle another open / close very easily.
 
 Just make them 'siblings (share the same parent element) and give the trigger a `toggles` attribute with a value set to the CSS selector of the target. The target will be initially closed. 
 
-**Caveats**
+---
 
-- I use the OJ gem here and `Oj.dump` because of a recursion bug in `to_json`. I'm still not sure what the cause is, perhaps a naming conflict somewhere.
+### **Caveats**
+
+- I use the OJ gem here and `Oj.dump` because of a recursion bug in `to_json`. I'm still not sure what the cause is, perhaps a naming conflict somewhere. Also, `Oj.dump` only works with single elements / arrays, not active record queries i.e. `Oj.dump Todo.all.limit(5)` wouldnt work

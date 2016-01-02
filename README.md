@@ -25,7 +25,6 @@
   - i.e. parameters are never declared in the routes.rb file, but they are declared in controllers. For example, routes like `DELETE /todos/MY_TODO_ID` are not supported, but `DELETE /todos?id=MY_TODO_ID` are.
 
 - Create a HTML-serving endpoint `rails g controller HtmlPages root`
-- 
 - Create websocket API endpoints and write routes:
    
    ```ruby

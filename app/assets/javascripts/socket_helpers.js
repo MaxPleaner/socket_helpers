@@ -1,12 +1,12 @@
 $(function(){
 
-  addLocation: function(record){
+  // addLocation: function(record){
     
-  }
+  // }
 
-  AddedHooks = {
-    "location"
-  }
+  // AddedHooks = {
+  //   "location"
+  // }
 
   curry = function (fn) {
     var slice = [].slice,
@@ -168,7 +168,8 @@ $(function(){
   }
 
   classList = function () {
-    return ["user", "script", "script_result"]
+    // return ["user", "script", "script_result"]
+    return ["todo"]
   }
 
   initFormBindings = function(selector){

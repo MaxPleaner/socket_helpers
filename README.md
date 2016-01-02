@@ -21,10 +21,14 @@
      end
    ```
 
- - Remove the default scaffold routes (`resources :todos`). This gem supports only _query_ parameters, not _path_ parameters.
-   i.e parameters are never declared in the routes.rb file, but they are declared in controllers.
-   for example, routes like `DELETE /todos/MY_TODO_ID` are not supported, but `DELETE /todos?id=MY_TODO_ID` are.
-   This may change pending an update to the gem.
+- Remove the default scaffold routes (`resources :todos`). This gem supports only _query_ parameters, not _path_ parameters.
+   
+i.e. parameters are never declared in the routes.rb file, but they are declared in controllers.
+
+for example, routes like `DELETE /todos/MY_TODO_ID` are not supported, but `DELETE /todos?id=MY_TODO_ID` are.
+
+This may change pending an update to the gem.
+
  - Write routes for create and destroy like so:
 
    ```ruby

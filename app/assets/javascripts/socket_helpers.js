@@ -227,11 +227,11 @@ $(function(){
   }
 
   SocketHelpers = {
-    initialize: function(classes){
+    initialize: function(classes, websocketBaseurl){
       // hide templates
       Style.addCSSRule("[template]", "display: none")
       // server hooks
-      dispatcher = new WebSocketRails('localhost:3000/websocket')
+      dispatcher = new WebSocketRails(websocketBaseurl)
       channels   = {}
       classes.forEach(function(class_name){
         var name = class_name

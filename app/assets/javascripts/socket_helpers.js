@@ -227,7 +227,7 @@ $(function(){
   }
 
   SocketHelpers = {
-    initialize = function(classes){
+    initialize: function(classes){
       // hide templates
       Style.addCSSRule("[template]", "display: none")
       // server hooks

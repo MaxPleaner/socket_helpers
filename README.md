@@ -2,7 +2,7 @@
 
 ### Usage /Installation
 
-_(these instructions can be seen implemented in the [socket_helpers_example](http://github.com/maxpleaner/socket_helpers_example) repo_
+_(these instructions can be seen implemented in the [socket_helpers_example](http://github.com/maxpleaner/socket_helpers_example) repo_ or seen [on a live site](http://socket-helpers-example.herokuapp.com)
 
 ---
 

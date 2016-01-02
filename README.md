@@ -98,7 +98,7 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
    end
  ```
 
-- the first argument of `websocket_response` can be a single record or an array/query. The second can be either `create`, `destroy`, or `update`. The receiver-hooks for these events are automatically created by the javascript client. 
+- the first argument of `websocket_response` can be a single record or an array. _It cannot be a query_. The second can be either `create`, `destroy`, or `update`. The receiver-hooks for these events are automatically created by the javascript client. 
 
 ---
 
@@ -158,10 +158,14 @@ Outside of `[template]`s, binding tags are a bit more verbose. `<span binding-ta
 
 Witout doing this, the page will be empty every time it is refreshed. The page needs to start out with a list of records loaded.
 
-Create an html element with an `init` attribute set to a model class, i.e. `todo`. This element will be auto-hidden. In the html-serving controller method, make an instance variable for whatever data is going to be included. On the html page, set the content of the `[init]` element to a JSON stringified version of your instance variable.`
+Create an html element with an `init` attribute set to a model class, i.e. `todo`. This element will be auto-hidden. In the html-serving controller method, make an instance variable for whatever data is going to be included (expects an array, not a single object or query). On the html page, use ERB to set the content of the `[init]` element to a JSON stringified version of your instance variable. For example, `<div init="todo"><%= Oj.dump([User.first]) %></div>`
 
 **Additional Helpers**
 
 you can make one html element toggle another open / close very easily.
 
 Just make them 'siblings (share the same parent element) and give the trigger a `toggles` attribute with a value set to the CSS selector of the target. The target will be initially closed. 
+
+**Caveats**
+
+- I use the OJ gem here and `Oj.dump` because of a recursion bug in `to_json`. I'm still not sure what the cause is, perhaps a naming conflict somewhere.

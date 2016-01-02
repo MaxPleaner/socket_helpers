@@ -7,6 +7,5 @@ gem "websocket-rails"
 gem "faye-websocket", '0.10.0'
 gem "nokogiri"
 gem 'oj'
-gem "pry-rails"
 # Specify your gem's dependencies in socket_helpers.gemspec
 gemspec

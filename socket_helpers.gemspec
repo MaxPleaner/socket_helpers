@@ -28,5 +28,4 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "faye-websocket", '0.10.0'
   spec.add_runtime_dependency "nokogiri"
   spec.add_runtime_dependency 'oj'
-  spec.add_runtime_dependency "pry-rails"
 end

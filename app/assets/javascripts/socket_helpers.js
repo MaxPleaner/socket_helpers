@@ -182,6 +182,10 @@ $(function(){
       var serializedAttrs = $form.serialize()
       var action = $form.attr("action")
       var method = $form.attr("method")
+      var $methodOverride = $form.find("[name=_method]")
+      if ($methodOverride.length > 0){
+        method = $methodOverride.val()
+      }
       $.ajax({
         url: action,
         method: method,

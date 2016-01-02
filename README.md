@@ -13,7 +13,7 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 
 #### 2.
 
-**create scaffold** `rails g scaffold Todo content:string; rake db:migrate`
+**create scaffold** `rails g scaffold Todo content:string; rake db:migrate;`
 
 ---
 

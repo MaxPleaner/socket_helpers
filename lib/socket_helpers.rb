@@ -2,6 +2,8 @@ require "socket_helpers/version"
 require 'rails'
 
 module SocketHelpers
+  class MyRailtie < Rails::Railtie
+  end
   module ControllerHelpers
     require 'oj'
     def public_attrs(record)

@@ -219,7 +219,11 @@
 
 <p>Just make them 'siblings (share the same parent element) and give the trigger a <code>toggles</code> attribute with a value set to the CSS selector of the target. The target will be initially closed. </p>
 
-<p><strong>Caveats</strong></p>
+<hr>
+
+<h3>
+<a id="caveats" class="anchor" href="#caveats" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Caveats</strong>
+</h3>
 
 <ul>
 <li>I use the OJ gem here and <code>Oj.dump</code> because of a recursion bug in <code>to_json</code>. I'm still not sure what the cause is, perhaps a naming conflict somewhere. Also, <code>Oj.dump</code> only works with single elements / arrays, not active record queries i.e. <code>Oj.dump Todo.all.limit(5)</code> wouldnt work</li>

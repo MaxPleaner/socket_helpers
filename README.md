@@ -89,3 +89,7 @@
 - **Loading initial data on the page**
 - Witout doing this, the page will be empty every time it is refreshed. The page needs to start out with a list of records loaded.
 - Create an html element with an `init` attribute set to a model class, i.e. `todo`. This element will be auto-hidden. In the html-serving controller method, make an instance variable for whatever data is going to be included. On the html page, set the content of the `[init]` element to a JSON stringified version of your instance variable.`
+
+- **Additional Helpers **
+- you can make one html element toggle another open / close very easily.
+- Just make them 'siblings (share the same parent element) and give the trigger a `toggles` attribute with a value set to the CSS selector of the target. The target will be initially closed. 

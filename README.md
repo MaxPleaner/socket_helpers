@@ -52,6 +52,7 @@
    ```
 - the first argument of `websocket_response` can be a single record or an array/query. The second can be either `create`, `destroy`, or `update`. The receiver-hooks for these events are automatically created by the javascript client. 
 - use the DSL for HTML in html_pages/root.html.erb. See below for a list of HTML components available.
+
     ```html
       <h3>Create todo</h3>
       <form action="todos" method="POST">

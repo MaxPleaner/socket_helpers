@@ -120,6 +120,7 @@
   &lt;/<span class="pl-ent">div</span>&gt;</pre></div>
 </li>
 <li><p>This provides working 'index, 'create', and 'destroy' websocket functionality in quite few lines of HTML, which is mainly the point of this gem. 'update' is automatic as well. When a record is added to the page, a <code>record-id</code> attribute is automatically set to <code>&lt;record_class&gt;,&lt;id&gt;</code> on the newly-added template. This is used to lookup records. </p></li>
+<li><p><code>rails s;</code>, open <a href="http://localhost:3000">localhost:3000</a></p></li>
 <li>
 <p>List of HTML components</p>
 
@@ -135,12 +136,22 @@
 <li>Outside of <code>[template]</code>s, binding tags are a bit more verbose. <code>&lt;span binding-tag='todos,1,content'&gt;&lt;/span&gt;</code> where the three comma-separated arguments are , , and . Internally, <code>template-attr</code> tags are converted to <code>binding-tag</code> once new records are added to the page. </li>
 </ul>
 </li>
-<li><p><strong>Loading initial data on the page</strong></p></li>
+<li>
+<p><strong>Loading initial data on the page</strong></p>
+
+<ul>
 <li>Witout doing this, the page will be empty every time it is refreshed. The page needs to start out with a list of records loaded.</li>
-<li><p>Create an html element with an <code>init</code> attribute set to a model class, i.e. <code>todo</code>. This element will be auto-hidden. In the html-serving controller method, make an instance variable for whatever data is going to be included. On the html page, set the content of the <code>[init]</code> element to a JSON stringified version of your instance variable.`</p></li>
-<li><p>*<em>Additional Helpers *</em></p></li>
+<li>Create an html element with an <code>init</code> attribute set to a model class, i.e. <code>todo</code>. This element will be auto-hidden. In the html-serving controller method, make an instance variable for whatever data is going to be included. On the html page, set the content of the <code>[init]</code> element to a JSON stringified version of your instance variable.`</li>
+</ul>
+</li>
+<li>
+<p><strong>Additional Helpers</strong></p>
+
+<ul>
 <li>you can make one html element toggle another open / close very easily.</li>
 <li>Just make them 'siblings (share the same parent element) and give the trigger a <code>toggles</code> attribute with a value set to the CSS selector of the target. The target will be initially closed. </li>
+</ul>
+</li>
 </ul>
         </section>
 

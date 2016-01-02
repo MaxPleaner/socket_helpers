@@ -93,6 +93,7 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
        websocket_response(todo, "destroy")
      end
      def todo_params
+       params.permit(:content)
      end
    end
  ```

@@ -34,13 +34,16 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 
 #### 5.
 
-**add jquery initializer** for whatever models you need websocket resources for (singular, snake case)
+**add jquery initializer** for whatever models you need websocket resources for (singular, snake case).
 
  ```javascript
    $(function(){
-    SocketHelpers.initialize(["todo"])
+    SocketHelpers.initialize(["todo"], "http://localhost:3000/websocket")
    })
  ```
+
+- the default websocket url (from the websocket-rails gem) is "/websocket"
+ 
 ---
 
 #### 6.

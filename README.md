@@ -27,7 +27,7 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 
 **add javascript requires to application.js**
 
-- `//= require websocket-rails/main`
+- `//= require websocket_rails/main`
 - `//= require socket_helpers`
 
 ---
@@ -82,6 +82,7 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 
  ```ruby
    # app/controllers/todos_controller.rb
+   # all the default scaffold stuff can be deleted
    class TodosController < ApplicationController
      def create
        todo = Todo.create(todo_params)

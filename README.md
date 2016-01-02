@@ -1,40 +1,40 @@
 # SocketHelpers
 
-## Installation and setup
+Installation:
 
-Using gemfile:  
-- gem 'socket_helpers'
+- install to system: `gem install socket_helpers;`
+- install with bundler: `gem 'socket_helpers'`
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'socket_helpers'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install socket_helpers
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/socket_helpers. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
-
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
+Usage (these instructions can be seen implemented in the [socket_helpers_example](http://github.com/maxpleaner/socket_helpers_example) repo:
+ - create a new rails app (`rails new App; cd App;`)
+ - make a scaffold (`rails g scaffold Todo content:string; rake db:migrate`)
+ - add this gem to the Gemfile and `bundle;`
+ - add javascript requires to application.js
+   - `//= require websocket-rails/main`
+   - `//= require socket_helpers`
+ - include the controller helpers by adding `include SocketHelpers::ControllerHelpers` to application_controller.rb like so:
+   ```ruby
+     class ApplicationController < ActionController::Base
+       include SocketHelpers::ControllerHelpers
+     end
+   ```
+ - Remove the default scaffold routes (`resources :todos`). This gem supports only _query_ parameters, not _path_ parameters.
+   i.e parameters are never declared in the routes.rb file, but they are declared in controllers.
+   for example, routes like `DELETE /todos/MY_TODO_ID` are not supported, but `DELETE /todos?id=MY_TODO_ID` are.
+   This may change pending an update to the gem.
+ - Write routes for create and destroy like so:
+   ```ruby
+     class TodosController < ApplicationController
+       def create
+         todo = Todo.create(todo_params)
+         websocket_response(todo, "create")
+       end
+       def destroy
+         todo = Todo.find_by(id: params[:id])
+         todo.destroy
+         websocket_response(todo, "destroy")
+       end
+       def todo_params
+       end
+     end
+   ```

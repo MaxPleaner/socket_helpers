@@ -138,7 +138,13 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 
 ---
 
-#### 11.
+### 11.
+
+**remove CSRF token check**
+
+comment out the `protect_from_forgery with: :exception` line in application_controller
+
+#### 12.
 
 **start rails server** `rails s;`, open [localhost:3000](http://localhost:3000)
 

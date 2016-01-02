@@ -191,15 +191,12 @@
 </h3>
 
 <ul>
-<li>
-<p>elements with a class of <code>&lt;model_name&gt;-index</code> become lists, with elements auto-removed and added in response to websocket events. For example, `</p>
-<div></div>
-</li>
+<li><p>elements with a class of <code>&lt;model_name&gt;-index</code> become lists, with elements auto-removed and added in response to websocket events. For example, <code>&lt;div class="todo-index"&gt;&lt;/div&gt;</code></p></li>
 <li><p>inside a <code>&lt;model_name&gt;-index</code> element, an element with a <code>template</code> attribute becomes the template for added records. These sections correspond to a single ActiveRecord class (underscore, singular i.e. <code>todo_list_item</code> for <code>TodoListItem</code>). For example, <code>&lt;div template&gt;&lt;/div&gt;</code></p></li>
 <li><p>inside a <code>[template]</code> element, the <code>template-attr</code> attribute is used to establish two-way databinding on an element. Its value is the name of the attribute. This can be used to set the value of form inputs or to change text nodes. For example, <code>&lt;input type="text" name="content" template-attr="content"&gt;</code> or <code>&lt;span template-attr="content"&gt;</code></p></li>
 <li><p><strong>all form submits are intercepted</strong> by event listeners by default. To override this, add the "skip-sockets" attribute to the form element. They submit AJAX requests using the url in the form's <code>action</code> attribute and the method in the form's <code>method</code> attribute (i.e. <code>action="/todos" method="POST"</code>). This works for <code>GET</code> and <code>POST</code> only, but <code>PUT</code> and <code>DELETE</code> can be used by adding a hidden input method i.e. <code>input type="hidden" name="_method" value="PUT"</code>. This is the default Rails behavior anyway.</p></li>
 <li><p>To submit an id with a form, bind a hidden attribute i.e. <code>&lt;input type="hidden" name="id" template-attr='id'&gt;</code></p></li>
-<li><p>Outside of <code>[template]</code>s, binding tags are a bit more verbose. <code>&lt;span binding-tag='todos,1,content'&gt;&lt;/span&gt;</code> where the three comma-separated arguments are <code>&lt;model_class&gt;</code>, <code>&lt;id&gt;</code>, and <code>&lt;attribute&gt;</code>. Internally, <code>template-attr</code> tags are converted to <code>binding-tag</code> once new records are added to the page. </p></li>
+<li><p>Outside of <code>[template]</code>s, binding tags are a bit more verbose. <code>&lt;span binding-tag='todos,1,content'&gt;&lt;/span&gt;</code> where the three comma-separated arguments are <code>&lt;model_class&gt;</code>, <code>&lt;id&gt;</code>, and <code>&lt;attribute&gt;</code>. <code>template-attr</code> tags are automatically converted to <code>binding-tag</code> once new records are added to the page. </p></li>
 </ul>
 
 <hr>
@@ -208,7 +205,7 @@
 <a id="loading-initial-data-on-the-page" class="anchor" href="#loading-initial-data-on-the-page" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Loading initial data on the page</strong>
 </h3>
 
-<p>Witout doing this, the page will be empty every time it is refreshed. The page needs to start out with a list of records loaded.</p>
+<p>Without doing this, the page will be empty every time it is refreshed. The page needs to start out with a list of records loaded.</p>
 
 <p>Create an html element with an <code>init</code> attribute set to a model class, i.e. <code>todo</code>. This element will be auto-hidden. In the html-serving controller method, make an instance variable for whatever data is going to be included (expects an array, not a single object or query). On the html page, use ERB to set the content of the <code>[init]</code> element to a JSON stringified version of your instance variable. For example, <code>&lt;div init="todo"&gt;&lt;%= Oj.dump([User.first]) %&gt;&lt;/div&gt;</code></p>
 
@@ -225,7 +222,7 @@
 <p><strong>Caveats</strong></p>
 
 <ul>
-<li>I use the OJ gem here and <code>Oj.dump</code> because of a recursion bug in <code>to_json</code>. I'm still not sure what the cause is, perhaps a naming conflict somewhere.</li>
+<li>I use the OJ gem here and <code>Oj.dump</code> because of a recursion bug in <code>to_json</code>. I'm still not sure what the cause is, perhaps a naming conflict somewhere. Also, <code>Oj.dump</code> only works with single elements / arrays, not active record queries i.e. <code>Oj.dump Todo.all.limit(5)</code> wouldnt work</li>
 </ul>
         </section>
 

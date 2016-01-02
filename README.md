@@ -154,13 +154,17 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 
 - Outside of `[template]`s, binding tags are a bit more verbose. `<span binding-tag='todos,1,content'></span>` where the three comma-separated arguments are `<model_class>`, `<id>`, and `<attribute>`. Internally, `template-attr` tags are converted to `binding-tag` once new records are added to the page. 
 
-**Loading initial data on the page**
+---
+
+### **Loading initial data on the page**
 
 Witout doing this, the page will be empty every time it is refreshed. The page needs to start out with a list of records loaded.
 
 Create an html element with an `init` attribute set to a model class, i.e. `todo`. This element will be auto-hidden. In the html-serving controller method, make an instance variable for whatever data is going to be included (expects an array, not a single object or query). On the html page, use ERB to set the content of the `[init]` element to a JSON stringified version of your instance variable. For example, `<div init="todo"><%= Oj.dump([User.first]) %></div>`
 
-**Additional Helpers**
+---
+
+### **Additional Helpers**
 
 you can make one html element toggle another open / close very easily.
 

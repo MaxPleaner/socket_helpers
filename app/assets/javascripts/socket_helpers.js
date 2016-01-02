@@ -1,13 +1,5 @@
 $(function(){
 
-  // addLocation: function(record){
-    
-  // }
-
-  // AddedHooks = {
-  //   "location"
-  // }
-
   curry = function (fn) {
     var slice = [].slice,
         args  = slice.call(arguments, 1);
@@ -149,7 +141,7 @@ $(function(){
         console.log(record)
         channels[model_name].trigger(
           (model_name+'-'+id+'-'+key+'-update'),
-          new_val
+          new_val   
         )
       }
     })
@@ -167,18 +159,17 @@ $(function(){
    })
   }
 
-  classList = function () {
-    // return ["user", "script", "script_result"]
-    return ["todo"]
-  }
 
   initFormBindings = function(selector){
     if (!selector){
       selector = "*"
     }
     $(document).on("submit", (selector+" form"), function(e){
-      e.preventDefault();
       var $form = $(e.currentTarget)
+      if ($form.hasAttribute("skip-sockets")) {
+        return true
+      }
+      e.preventDefault();
       var serializedAttrs = $form.serialize()
       var action = $form.attr("action")
       var method = $form.attr("method")
@@ -231,32 +222,32 @@ $(function(){
       records.forEach(function(record){
         processNewRecords(JSON.stringify(record))
       })
+      $init.hide()
     }) 
   }
 
-  initialize = function(){
-    // hide templates
-    Style.addCSSRule("[template]", "display: none")
-    // server hooks
-    dispatcher = new WebSocketRails('localhost:3000/websocket')
-    classes    = classList()
-    channels   = {}
-    classes.forEach(function(class_name){
-      var name = class_name
-      channels[name] = dispatcher.subscribe(name)
-      var channel = channels[name]
-      channel.bind('create', processNewRecords)
-      channel.bind('update', processUpdateRecords)
-      channel.bind('destroy', processDestroyRecords)
-    })
+  SocketHelpers = {
+    initialize = function(classes){
+      // hide templates
+      Style.addCSSRule("[template]", "display: none")
+      // server hooks
+      dispatcher = new WebSocketRails('localhost:3000/websocket')
+      channels   = {}
+      classes.forEach(function(class_name){
+        var name = class_name
+        channels[name] = dispatcher.subscribe(name)
+        var channel = channels[name]
+        channel.bind('create', processNewRecords)
+        channel.bind('update', processUpdateRecords)
+        channel.bind('destroy', processDestroyRecords)
+      })
 
-    // client hooks
-    initBindings(getBindingTags("*"))
-    initFormBindings("*")
-    initToggleInitialState("*")
-    initTogglerListeners("*")
-    initServerSeeds()
+      // client hooks
+      initBindings(getBindingTags("*"))
+      initFormBindings("*")
+      initToggleInitialState("*")
+      initTogglerListeners("*")
+      initServerSeeds()
+    }
   }
-
-  initialize()
 })

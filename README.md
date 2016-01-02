@@ -13,6 +13,14 @@
 - add javascript requires to application.js
   - `//= require websocket-rails/main`
   - `//= require socket_helpers`
+- add jquery initializer for whatever models you need websocket resources for
+
+   ```javascript
+     $(function(){
+      SocketHelpers.initialize(["todo"])
+     })
+   ```
+
 - include the controller helpers to application_controller
  
    ```ruby
@@ -84,7 +92,7 @@
   - elements with a class of `<model_name>-index` become lists, with elements auto-removed and added in response to websocket events. 
   - inside a `<model_name>-index` element, an element with a `template` attribute becomes the template for added records. These sections correspond to a single ActiveRecord class (underscore, singular i.e. `todo_list_item` for `TodoListItem`)
   - inside a `[template]` element (i.e. `<div template></div>`), the `template-attr` attribute is used to establish two-way databinding on an element. Its value is the name of the attribute. This can be used to set the value of form inputs or to change text nodes.
-  - **all form submits are intercepted** by event listeners. They submit AJAX requests using the url in the form's `action` attribute and the method in the form's `method` attribute (i.e. `action="/todos" method=POST"`). This works for `GET` and `POST`, but Like normally in Rails, `PUT` and `DELETE` can be selected by adding a hidden input method i.e. `input type="hidden" name="_method" value="PUT"`
+  - **all form submits are intercepted** by event listeners by default. To override this, add the "skip-sockets" attribute to the form element. They submit AJAX requests using the url in the form's `action` attribute and the method in the form's `method` attribute (i.e. `action="/todos" method=POST"`). This works for `GET` and `POST`, but Like normally in Rails, `PUT` and `DELETE` can be selected by adding a hidden input method i.e. `input type="hidden" name="_method" value="PUT"`
   - To submit an id with a form, bind a hidden attribute i.e. `<input type="hidden" name="id" template-attr='id'>`
   - Outside of `[template]`s, binding tags are a bit more verbose. `<span binding-tag='todos,1,content'></span>` where the three comma-separated arguments are <model_class>, <id>, and <attribute>. Internally, `template-attr` tags are converted to `binding-tag` once new records are added to the page. 
 

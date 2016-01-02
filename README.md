@@ -1,10 +1,9 @@
 # SocketHelpers
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/socket_helpers`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Installation and setup
 
-TODO: Delete this and the text above, and describe your gem
-
-## Installation
+Using gemfile:  
+- gem 'socket_helpers'
 
 Add this line to your application's Gemfile:
 

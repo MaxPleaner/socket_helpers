@@ -5,16 +5,16 @@ require 'socket_helpers/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "socket_helpers"
-  spec.version       = SocketHelpers::VERSION
+  spec.version       = "0.0.0"
   spec.authors       = ["maxpleaner"]
   spec.email         = ["maxpleaner@gmail.com"]
 
-  spec.summary       = %q{foo}
-  spec.description   = %q{foo}
-  spec.homepage      = "http://github.com"
+  spec.summary       = %q{websocket helpers for rails}
+  spec.description   = %q{websocket helpers for rails}
+  spec.homepage      = "http://github.com/maxpleaner/socket_helpers"
   spec.license       = "MIT"
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(socket_helpers.gemspec|test|spec|features)/}) }
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib", "app/controllers"]

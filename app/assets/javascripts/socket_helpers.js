@@ -161,12 +161,13 @@ $(function(){
 
 
   initFormBindings = function(selector){
+    debugger
     if (!selector){
       selector = "*"
     }
     $(document).on("submit", (selector+" form"), function(e){
       var $form = $(e.currentTarget)
-      if ($form.hasAttribute("skip-sockets")) {
+      if ($form[0].hasAttribute("skip-sockets")) {
         return true
       }
       e.preventDefault();

@@ -244,6 +244,7 @@ $(function(){
 
       // client hooks
       initBindings(getBindingTags("*"))
+      debugger
       initFormBindings("*")
       initToggleInitialState("*")
       initTogglerListeners("*")

@@ -161,7 +161,6 @@ $(function(){
 
 
   initFormBindings = function(selector){
-    debugger
     if (!selector){
       selector = "*"
     }
@@ -245,7 +244,6 @@ $(function(){
 
       // client hooks
       initBindings(getBindingTags("*"))
-      debugger
       initFormBindings("*")
       initToggleInitialState("*")
       initTogglerListeners("*")

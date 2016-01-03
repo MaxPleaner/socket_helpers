@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "http://github.com/maxpleaner/socket_helpers"
   spec.license       = "MIT"
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(socket_helpers.gemspec|test|spec|features)/}) }
+  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(socket_helpers-1.0.4.gem|socket_helpers.gemspec|test|spec|features)/}) }
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib", "app/controllers"]

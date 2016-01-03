@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "socket_helpers"
-  spec.version       = "1.0.3"
+  spec.version       = "1.0.4"
   spec.authors       = ["maxpleaner"]
   spec.email         = ["maxpleaner@gmail.com"]
 

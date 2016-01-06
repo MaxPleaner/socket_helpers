@@ -89,7 +89,6 @@ $(function(){
     return JSON.parse(record)
   }
   
-  
   processNewRecords = function(serializedRecords){
     serializedRecords = $.makeArray(serializedRecords)
     serializedRecords.forEach(function(record){
@@ -139,10 +138,18 @@ $(function(){
       for (var key in record){
         var new_val = record[key]
         console.log(record)
+        var bindingTag = model_name+','+id+','+key        
         channels[model_name].trigger(
           (model_name+'-'+id+'-'+key+'-update'),
           new_val   
         )
+        // for some reason this is also necessary when
+        // the binding elements are not in a [template]
+        // although this should be called by the above 'trigger'
+          updateElement(
+            $("[binding-tag='"+bindingTag+"']"),
+            new_val
+          )
       }
     })
   }

@@ -17,8 +17,6 @@ module SocketHelpers
         puts "triggered #{class_name} #{action}"
         WebsocketRails[class_name].trigger(action, public_attrs(record))
       end
-      render text: ""
-      return false
     end   
   end
   class Engine < Rails::Engine

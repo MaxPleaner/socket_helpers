@@ -182,6 +182,24 @@ Create an html element with an `init` attribute set to a model class, i.e. `todo
 
 ---
 
+### ** How to do links with params **
+
+i.e. how to do
+
+```html
+<a href="/my_link?with=params">My Link </a>
+```
+
+The way to do this is by building a form and disguising it as a link. Basically come up with some CSS style so the form looks like a link. I don't really know how to do the CSS, but the form HTML code is below. This has the effect of creating a button on the page with the desired link follow-through when clicked. In this example, the 'link-style' class has to be externally implemented.
+
+```html
+<form skip-sockets class="link-style" action="/notepad" method="GET">
+  <input type="hidden" name="name" template-attr='name'>
+  <input type="submit" template-attr='name'>
+</form>
+
+```
+
 ### **Additional Helpers**
 
 you can make one html element toggle another open / close very easily.

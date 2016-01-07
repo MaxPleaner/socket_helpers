@@ -70,9 +70,9 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
      end
    end
  ```
-- make sure to add a 'return' or 'render' after `websocket_response` to avoid "template not found" errors.
-
 - the first argument of `websocket_response` can be a single record or an array. _It cannot be a query_. The second can be either `create`, `destroy`, or `update` (these values hard-coded into the app. The receiver-hooks for these events are automatically created by the javascript client. 
+
+- make sure to add a 'return' or 'render' after `websocket_response` to avoid "template not found" errors.
 
 **use the DSL for HTML** in html_pages/root.html.erb. See below for a list of HTML components available.
 
@@ -134,15 +134,33 @@ It is a working todo-app with websockets. Try opening two browser windows at onc
 
 ---
 
-### **Loading initial data on the page**
+### **Other notes**
+
+#### **Changing a classes' published class name
+
+- Say I created a `LocationCategorization` scaffold but
+  realized that I would rather publish the data  using 
+  a `record_class` value of `category` instead of `location_categorization`.
+  I don't want to undo the scaffold, so I add a method to the `LocationCategorization` class:
+
+  ```ruby
+    class LocationCategorization < ActiveRecord::Base
+      def published_class
+        "category"
+      end
+    end
+  ```
+
+This particular method name is used as an optional override
+for the default published class name (`record.class.to_s.underscore`)
+
+#### **Loading initial data on the page**
 
 Without doing this, the page will be empty every time it is refreshed. The page needs to start out with a list of records loaded.
 
 Create an html element with an `init` attribute set to a model class, i.e. `todo`. This element will be auto-hidden. In the html-serving controller method, make an instance variable for whatever data is going to be included (expects an array, not a single object or query). On the html page, use ERB to set the content of the `[init]` element to a JSON stringified version of your instance variable. For example, `<div init="todo"><%= Oj.dump([User.first]) %></div>`
 
----
-
-### ** How to do links with params **
+#### **How to do links with params**
 
 i.e. how to do
 
@@ -159,6 +177,8 @@ The way to do this is by building a form and disguising it as a link. Basically 
 </form>
 
 ```
+
+
 
 ### **Additional Helpers**
 
@@ -183,4 +203,5 @@ Just make them 'siblings (share the same parent element) and give the trigger a 
     )
   ```
 - This is done automatically when using `websocket_response`,
-but needs to be added otherwise.
+but needs to be added otherwise (like when using server seeded data 
+to set a page's initial state)

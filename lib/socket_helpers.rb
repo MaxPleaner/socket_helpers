@@ -7,13 +7,13 @@ module SocketHelpers
   module ControllerHelpers
     require 'oj'
     def public_attrs(record)
-      attrs = record.attributes.merge('record_class' => record.class.to_s.underscore.downcase)
+      attrs = record.attributes.merge('record_class' => record.class.to_s.underscore)
       return Oj.dump(attrs)
     end
     def websocket_response(records, action)
       records = [records] unless records.is_a?(Array)
       records.each do |record|
-        class_name = record.class.to_s.underscore.downcase
+        class_name = record_try(:published_class) || record.class.to_s.underscore
         puts "triggered #{class_name} #{action}"
         WebsocketRails[class_name].trigger(action, public_attrs(record))
       end

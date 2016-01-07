@@ -13,7 +13,7 @@ module SocketHelpers
     def websocket_response(records, action)
       records = [records] unless records.is_a?(Array)
       records.each do |record|
-        class_name = record_try(:published_class) || record.class.to_s.underscore
+        class_name = record.try(:published_class) || record.class.to_s.underscore
         puts "triggered #{class_name} #{action}"
         WebsocketRails[class_name].trigger(action, public_attrs(record))
       end

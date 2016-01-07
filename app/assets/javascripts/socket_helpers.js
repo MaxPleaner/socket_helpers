@@ -248,11 +248,11 @@ $(function(){
         channel.bind('create', processNewRecords)
         channel.bind('update', processUpdateRecords)
         channel.bind('destroy', processDestroyRecords)
-        SocketHelpers.addedHooks[class_name].forEach(function(hook){
-          var name = hook['name']
-          var callback = hook['callback']
-          channel.bind(name, callback)
-        })
+        // SocketHelpers.addedHooks.forEach(function(hook){
+        //   var channelName = hook['channelName'],
+        //       callback    = hook['callback']
+        //   channels
+        // })
       })
 
       // client hooks

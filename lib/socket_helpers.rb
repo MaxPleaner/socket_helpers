@@ -7,7 +7,7 @@ module SocketHelpers
   module ControllerHelpers
     require 'oj'
     def public_attrs(record)
-      attrs = record.attributes.merge('record_class' => record.class.to_s.underscore)
+      attrs = record.attributes.merge('record_class' => record.try(:published_class) || record.class.to_s.underscore)
       return Oj.dump(attrs)
     end
     def websocket_response(records, action)

@@ -247,6 +247,9 @@ $(function(){
         channel.bind('create', processNewRecords)
         channel.bind('update', processUpdateRecords)
         channel.bind('destroy', processDestroyRecords)
+        SocketHelpers.addedHooks.forEach(function(hook){
+
+        })
       })
 
       // client hooks
@@ -255,6 +258,7 @@ $(function(){
       initToggleInitialState("*")
       initTogglerListeners("*")
       initServerSeeds()
+      return dispatcher
     }
   }
 })

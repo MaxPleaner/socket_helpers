@@ -6,33 +6,17 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 
 ---
 
-#### 1.
+####
 **create rails app** `rails new App; cd App;`
-
----
-
-#### 2.
 
 **create a model** `rails g scaffold Todo content:string; rake db:migrate;`
 
----
-
-#### 3.
-
 **add gems** `gem 'socket_helpers'` and `gem 'websocket-rails'`
-
----
-
-#### 4.
 
 **add javascript requires to application.js**
 
 - `//= require websocket_rails/main`
 - `//= require socket_helpers`
-
----
-
-#### 5.
 
 **add jquery initializer** for whatever models you need websocket resources for (singular, snake case).
 
@@ -41,12 +25,7 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
     SocketHelpers.initialize(["todo"], "http://localhost:3000/websocket")
    })
  ```
-
 - the default websocket url (from the websocket-rails gem) is "/websocket"
- 
----
-
-#### 6.
 
 **include the controller helpers to application_controller**
  
@@ -56,23 +35,11 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
    end
  ```
 
----
-
-#### 7.
-
 **Remove the default scaffold routes** (`resources :todos`). This gem supports only query parameters, not path parameters. This limitation only applies to `websocket_response` endpoints. Other endpoints can use path parameters.
 
 - i.e. parameters are never declared in the routes.rb file, but they are declared in controllers. For example, routes like `DELETE /todos/MY_TODO_ID` are not supported, but `DELETE /todos?id=MY_TODO_ID` are.
 
----
-
-#### 8.
-
 **Create a HTML-serving endpoint** `rails g controller HtmlPages root`
-
----
-
-#### 9.
 
 **Create websocket API endpoints and write routes**
  
@@ -90,23 +57,22 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
      def create
        todo = Todo.create(todo_params)
        websocket_response(todo, "create")
+       return false
      end
      def destroy
        todo = Todo.find_by(id: params[:id])
        todo.destroy
        websocket_response(todo, "destroy")
+       return false
      end
      def todo_params
        params.permit(:content)
      end
    end
  ```
+- make sure to add a 'return' or 'render' after `websocket_response` to avoid "template not found" errors.
 
 - the first argument of `websocket_response` can be a single record or an array. _It cannot be a query_. The second can be either `create`, `destroy`, or `update` (these values hard-coded into the app. The receiver-hooks for these events are automatically created by the javascript client. 
-
----
-
-#### 10.
 
 **use the DSL for HTML** in html_pages/root.html.erb. See below for a list of HTML components available.
 
@@ -136,15 +102,9 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 
 - This provides working 'index, 'create', and 'destroy' websocket functionality in quite few lines of HTML, which is mainly the point of this gem. 'update' is automatic as well. When a record is added to the page, a `record-id` attribute is automatically set to `<record_class>,<id>` on the newly-added template. This is used to lookup records. 
 
----
-
-### 11.
-
 **remove CSRF token check**
 
 comment out the `protect_from_forgery with: :exception` line in application_controller
-
-#### 12.
 
 **start rails server** `rails s;`, open [localhost:3000](http://localhost:3000)
 
@@ -208,6 +168,19 @@ Just make them 'siblings (share the same parent element) and give the trigger a 
 
 ---
 
-### **Caveats**
+### **Use of OJ gem for JSON**
 
-- I use the OJ gem here and `Oj.dump` because of a recursion bug in `to_json`. I'm still not sure what the cause is, perhaps a naming conflict somewhere. Also, `Oj.dump` only works with single elements / arrays, not active record queries i.e. `Oj.dump Todo.all.limit(5)` wouldnt work
+- I use the OJ gem here and `Oj.dump` because of a recursion bug in `to_json`. I'm still not sure what the cause is, perhaps a naming conflict somewhere. Also, `Oj.dump` only works with single elements / arrays, not active record queries i.e. `Oj.dump Todo.all.limit(5)` wouldnt work.
+- However Oj seems pretty legit.
+- The way to Json-stringify records for a websocket-publish action is:
+  ```ruby
+    Oj.dump(
+      records.map do |record|
+        record.attributes.merge(
+          'record_class' => record.class.to_s.underscore,
+        )
+      end
+    )
+  ```
+- This is done automatically when using `websocket_response`,
+but needs to be added otherwise.

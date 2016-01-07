@@ -234,6 +234,7 @@ $(function(){
   }
 
   SocketHelpers = {
+    addedHooks: [],
     initialize: function(classes, websocketBaseurl){
       // hide templates
       Style.addCSSRule("[template]", "display: none")
@@ -247,8 +248,10 @@ $(function(){
         channel.bind('create', processNewRecords)
         channel.bind('update', processUpdateRecords)
         channel.bind('destroy', processDestroyRecords)
-        SocketHelpers.addedHooks.forEach(function(hook){
-
+        SocketHelpers.addedHooks[class_name].forEach(function(hook){
+          var name = hook['name']
+          var callback = hook['callback']
+          channel.bind(name, callback)
         })
       })
 

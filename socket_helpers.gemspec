@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "socket_helpers"
-  spec.version       = "1.0.6"
+  spec.version       = "1.0.7"
   spec.authors       = ["maxpleaner"]
   spec.email         = ["maxpleaner@gmail.com"]
 
@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "http://github.com/maxpleaner/socket_helpers"
   spec.license       = "MIT"
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(socket_helpers-1.0.6.gem|socket_helpers.gemspec|test|spec|features)/}) }
+  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(socket_helpers-1.0.7.gem|socket_helpers.gemspec|test|spec|features)/}) }
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib", "app/controllers"]

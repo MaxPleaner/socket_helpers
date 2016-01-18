@@ -104,8 +104,9 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
     </div>
     
     <%# define some todos which will initially appear on the page %>
+    <%# This serialization is done automatically during 'websocket_response' %>
     <% @todos = Todo.limit(1).map do |todo| %>
-    <%   todo.attributes.merge('record_class' => 'todo' %>
+    <%   todo.attributes.merge('record_class' => 'todo') %>
     <% end %>
     
     <%# initial data for the page %>

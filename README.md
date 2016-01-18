@@ -77,15 +77,22 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
 **use the DSL for HTML** in html_pages/root.html.erb. See below for a list of HTML components available.
 
   ```html
+  
     <h3>Create todo</h3>
+    
+    <%# This form will submit via AJAX %>
+    <%# all forms do this by default. use <form skip-sockets> to prevent it.%>
     <form action="todos" method="POST">
       <input type="text" name="content" placeholder="content">
       <input type="submit" value="submit">
     </form>
+    
+    <%# a class value of "model_name-index" is special %>
+    <%# and sets up this section as a container for a list of records %>
     <div class="todo-index">
       <h3>Todos</h3>
-      <p template>
-        <span template-attr="content"></span>
+      <p template> <%# special attr defines this as the template for added records %>
+        <span template-attr="content"></span><%# two-way databinding for 'content %>
         <form action="/todos" method="POST"
           <input type="hidden" name="_method" value="DELETE"
           <input type="hidden" name="id" template-attr="id"
@@ -95,8 +102,17 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
       </p>
       </ul>
     </div>
+    
+    <%# define some todos which will initially appear on the page %>
+    <% @todos = Todo.limit(1).map do |todo| %>
+    <%   todo.attributes.merge('record_class' => 'todo' %>
+    <% end %>
+    
+    <%# initial data for the page %>
+    <%# update and delete listeners are set up for these ids %>
     <div init="todo">
-      <%= Oj.dump [Todo.first] %>
+      <%= Oj.dump @todos.to_a %>
+      <%# make sure not to dump a query %>
     </div>
   ```
 
@@ -190,18 +206,4 @@ Just make them 'siblings (share the same parent element) and give the trigger a 
 
 ### **Use of OJ gem for JSON**
 
-- I use the OJ gem here and `Oj.dump` because of a recursion bug in `to_json`. I'm still not sure what the cause is, perhaps a naming conflict somewhere. Also, `Oj.dump` only works with single elements / arrays, not active record queries i.e. `Oj.dump Todo.all.limit(5)` wouldnt work.
-- However Oj seems pretty legit.
-- The way to Json-stringify records for a websocket-publish action is:
-  ```ruby
-    Oj.dump(
-      records.map do |record|
-        record.attributes.merge(
-          'record_class' => record.class.to_s.underscore,
-        )
-      end
-    )
-  ```
-- This is done automatically when using `websocket_response`,
-but needs to be added otherwise (like when using server seeded data 
-to set a page's initial state)
+- I use the OJ gem here and `Oj.dump` because of an unsolved recursion bug in `to_json` I encountered.

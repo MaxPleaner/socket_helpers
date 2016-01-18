@@ -82,7 +82,7 @@ _(these instructions can be seen implemented in the [socket_helpers_example](htt
       <input type="text" name="content" placeholder="content">
       <input type="submit" value="submit">
     </form>
-    <div class="todo_index">
+    <div class="todo-index">
       <h3>Todos</h3>
       <p template>
         <span template-attr="content"></span>
